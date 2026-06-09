@@ -107,7 +107,7 @@
       <div class="by" data-i="by"></div>
     </div>
 
-    <a class="feat" href="webcal://mr-989.github.io/Worldcup2026/WorldCup2026.ics">
+<a class="feat" id="calendarBtn" href="#">
       <div class="feat-in">
         <span class="badge" data-i="badge"></span>
         <div class="feat-top">
@@ -142,7 +142,21 @@
 
     <footer>© 2026 <b>Nuvopulse</b> · <span data-i="foot"></span></footer>
   </div>
+const calendarUrl = "https://mr-989.github.io/Worldcup2026/WorldCup2026.ics";
+const iosUrl = "webcal://mr-989.github.io/Worldcup2026/WorldCup2026.ics";
+const androidUrl = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(calendarUrl);
 
+document.getElementById("calendarBtn").addEventListener("click", function(e){
+  e.preventDefault();
+
+  const ua = navigator.userAgent.toLowerCase();
+
+  if (ua.includes("iphone") || ua.includes("ipad") || ua.includes("mac")) {
+    window.location.href = iosUrl;
+  } else {
+    window.location.href = androidUrl;
+  }
+});
 <script>
 const I = {
   ar:{dir:"rtl",tag:"نبض كل جديد ⚡",by:"بإشراف عبدالملك هوتي",badge:"⭐ مميّز",
