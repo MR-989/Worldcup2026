@@ -171,23 +171,67 @@ function setLang(l){
 
 const WEBCAL = "webcal://cdn.jsdelivr.net/gh/MR-989/Worldcup2026@main/worldcup.ics";
 const HTTPS  = "https://cdn.jsdelivr.net/gh/MR-989/Worldcup2026@main/worldcup.ics";
-const GCAL   = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(HTTPS);
+const GCAL_ADD = "https://calendar.google.com/calendar/u/0/r/settings/addbyurl";
 
 function subscribe(){
   const ua = navigator.userAgent || "";
   const isApple = /iPhone|iPad|iPod|Macintosh/i.test(ua);
   const isAndroid = /Android/i.test(ua);
   if(isApple){
-    // iOS/macOS: webcal opens Calendar directly
     window.location.href = WEBCAL;
-  } else if(isAndroid){
-    // Android: open Google Calendar add-by-URL
-    window.open(GCAL, "_blank");
   } else {
-    // Desktop/other: try Google Calendar
-    window.open(GCAL, "_blank");
+    // Android & desktop: show instructions overlay (mobile Google Calendar can't add URL directly)
+    showHelp(isAndroid);
   }
 }
+
+function showHelp(isAndroid){
+  const lang = document.body.getAttribute("data-lang") || "ar";
+  const H = {
+    ar:{title:"إضافة التقويم على "+(isAndroid?"أندرويد":"جهازك"),
+        steps:[
+          "افتح <b>calendar.google.com</b> من متصفح (الأفضل من كمبيوتر، أو متصفح الجوال بوضع \"موقع كامل\")",
+          "اضغط <b>+</b> بجانب \"تقاويم أخرى\" ← <b>من عنوان URL</b>",
+          "الصق هذا الرابط:",
+          "اضغط <b>إضافة تقويم</b> — سيظهر في جوالك تلقائياً ✅"
+        ],close:"إغلاق",copy:"نسخ الرابط",copied:"تم النسخ ✓"},
+    en:{title:"Add calendar on "+(isAndroid?"Android":"your device"),
+        steps:[
+          "Open <b>calendar.google.com</b> in a browser (best on desktop, or mobile browser in \"Desktop site\" mode)",
+          "Click <b>+</b> next to \"Other calendars\" ← <b>From URL</b>",
+          "Paste this link:",
+          "Click <b>Add calendar</b> — it will sync to your phone ✅"
+        ],close:"Close",copy:"Copy link",copied:"Copied ✓"},
+    fa:{title:"افزودن تقویم در "+(isAndroid?"اندروید":"دستگاه شما"),
+        steps:[
+          "<b>calendar.google.com</b> را در مرورگر باز کن (بهتر روی کامپیوتر یا حالت \"سایت دسکتاپ\")",
+          "روی <b>+</b> کنار \"تقویم‌های دیگر\" بزن ← <b>از URL</b>",
+          "این لینک را بچسبان:",
+          "روی <b>افزودن تقویم</b> بزن — به گوشی‌ات همگام می‌شود ✅"
+        ],close:"بستن",copy:"کپی لینک",copied:"کپی شد ✓"}
+  };
+  const t = H[lang];
+  let ov = document.getElementById("helpOverlay");
+  if(ov) ov.remove();
+  ov = document.createElement("div");
+  ov.id = "helpOverlay";
+  ov.style.cssText = "position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);";
+  ov.innerHTML = `
+    <div style="background:#12101f;border:1px solid rgba(255,255,255,.12);border-radius:20px;max-width:400px;width:100%;padding:24px;color:#eef0ff;">
+      <div style="font-size:18px;font-weight:800;margin-bottom:16px;background:linear-gradient(100deg,#00e0c6,#7b5cff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">📅 ${t.title}</div>
+      <div style="font-size:14px;line-height:1.7;">
+        <div style="margin-bottom:10px;">1. ${t.steps[0]}</div>
+        <div style="margin-bottom:10px;">2. ${t.steps[1]}</div>
+        <div style="margin-bottom:8px;">3. ${t.steps[2]}</div>
+        <div style="background:#06060c;border:1px solid #333;border-radius:8px;padding:10px;font-size:11px;direction:ltr;word-break:break-all;margin-bottom:6px;font-family:monospace;color:#7b9;">${HTTPS}</div>
+        <button onclick="navigator.clipboard.writeText('${HTTPS}').then(()=>{this.textContent='${t.copied}';})" style="width:100%;padding:10px;border:none;border-radius:10px;background:linear-gradient(100deg,#00e0c6,#7b5cff);color:#06060c;font-weight:800;cursor:pointer;margin-bottom:12px;">📋 ${t.copy}</button>
+        <div style="margin-bottom:16px;">4. ${t.steps[3]}</div>
+      </div>
+      <button onclick="document.getElementById('helpOverlay').remove()" style="width:100%;padding:12px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:transparent;color:#eef0ff;font-weight:700;cursor:pointer;">${t.close}</button>
+    </div>`;
+  document.body.appendChild(ov);
+}
+
 document.getElementById("subscribeBtn").addEventListener("click", subscribe);
 
 setLang("ar");
