@@ -107,7 +107,7 @@
       <div class="by" data-i="by"></div>
     </div>
 
-<a class="feat" id="calendarBtn" href="#">
+    <div class="feat" id="subscribeBtn" style="cursor:pointer">
       <div class="feat-in">
         <span class="badge" data-i="badge"></span>
         <div class="feat-top">
@@ -120,7 +120,7 @@
         <div class="feat-cta" data-i="fcta"></div>
         <div class="small" data-i="fsmall"></div>
       </div>
-    </a>
+    </div>
 
     <div class="label" data-i="follow"></div>
 
@@ -142,21 +142,7 @@
 
     <footer>© 2026 <b>Nuvopulse</b> · <span data-i="foot"></span></footer>
   </div>
-const calendarUrl = "https://mr-989.github.io/Worldcup2026/WorldCup2026.ics";
-const iosUrl = "webcal://mr-989.github.io/Worldcup2026/WorldCup2026.ics";
-const androidUrl = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(calendarUrl);
 
-document.getElementById("calendarBtn").addEventListener("click", function(e){
-  e.preventDefault();
-
-  const ua = navigator.userAgent.toLowerCase();
-
-  if (ua.includes("iphone") || ua.includes("ipad") || ua.includes("mac")) {
-    window.location.href = iosUrl;
-  } else {
-    window.location.href = androidUrl;
-  }
-});
 <script>
 const I = {
   ar:{dir:"rtl",tag:"نبض كل جديد ⚡",by:"بإشراف عبدالملك هوتي",badge:"⭐ مميّز",
@@ -182,6 +168,28 @@ function setLang(l){
     b.classList.toggle("active", b.getAttribute("data-set")===l);
   });
 }
+
+const WEBCAL = "webcal://cdn.jsdelivr.net/gh/MR-989/Worldcup2026@main/worldcup.ics";
+const HTTPS  = "https://cdn.jsdelivr.net/gh/MR-989/Worldcup2026@main/worldcup.ics";
+const GCAL   = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(HTTPS);
+
+function subscribe(){
+  const ua = navigator.userAgent || "";
+  const isApple = /iPhone|iPad|iPod|Macintosh/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+  if(isApple){
+    // iOS/macOS: webcal opens Calendar directly
+    window.location.href = WEBCAL;
+  } else if(isAndroid){
+    // Android: open Google Calendar add-by-URL
+    window.open(GCAL, "_blank");
+  } else {
+    // Desktop/other: try Google Calendar
+    window.open(GCAL, "_blank");
+  }
+}
+document.getElementById("subscribeBtn").addEventListener("click", subscribe);
+
 setLang("ar");
 </script>
 </body>
