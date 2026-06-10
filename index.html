@@ -8,232 +8,207 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Vazirmatn:wght@400;600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#06060c; --pulse:#00e0c6; --pulse2:#7b5cff; --hot:#ff4d8d;
-    --paper:#eef0ff; --muted:rgba(238,240,255,.5);
-    --card:rgba(255,255,255,.045); --stroke:rgba(255,255,255,.09);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  body{font-family:'Cairo',sans-serif;color:var(--paper);background:var(--bg);min-height:100vh;
-    display:flex;justify-content:center;align-items:flex-start;padding:24px 18px 60px;position:relative;overflow-x:hidden;}
-  body[data-lang="fa"]{font-family:'Vazirmatn',sans-serif;}
-  body[data-lang="en"]{font-family:'Space Grotesk',sans-serif;direction:ltr;}
-  body::before{content:"";position:fixed;inset:-30%;z-index:0;pointer-events:none;
-    background:
-      radial-gradient(420px 420px at 18% 8%, rgba(0,224,198,.20), transparent 60%),
-      radial-gradient(460px 460px at 85% 18%, rgba(123,92,255,.22), transparent 60%),
-      radial-gradient(500px 500px at 50% 105%, rgba(255,77,141,.16), transparent 60%);
-    filter:blur(8px);animation:drift 14s ease-in-out infinite alternate;}
-  .wrap{width:100%;max-width:440px;position:relative;z-index:1;}
-
-  /* language switcher */
-  .langbar{display:flex;gap:6px;justify-content:center;margin-bottom:18px;animation:rise .6s both;}
-  .langbar button{
-    background:var(--card);border:1px solid var(--stroke);color:var(--muted);
-    border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;
-    font-family:inherit;transition:all .15s;}
-  .langbar button.active{background:linear-gradient(100deg,var(--pulse),var(--pulse2));color:#06060c;border-color:transparent;}
-
-  .brand{display:flex;flex-direction:column;align-items:center;margin-bottom:6px;}
-  .logo{display:flex;align-items:center;gap:10px;animation:rise .7s both;}
-  .logo .dot{width:14px;height:14px;border-radius:50%;background:var(--pulse);
-    box-shadow:0 0 0 0 rgba(0,224,198,.6);animation:beat 1.6s infinite;}
-  .logo h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-.5px;
-    background:linear-gradient(100deg,var(--pulse),var(--pulse2) 60%,var(--hot));
-    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-  .heartbeat{width:200px;height:30px;margin:8px 0 2px;animation:rise .7s .1s both;}
-  .heartbeat path{stroke:url(#pg);stroke-width:2.5;fill:none;stroke-dasharray:300;stroke-dashoffset:300;
-    animation:trace 2.4s ease-in-out .4s forwards, glow 2.6s ease-in-out 2.8s infinite;}
-  .tag{color:var(--paper);font-weight:700;font-size:15px;margin-top:6px;animation:rise .7s .16s both;}
-  .by{color:var(--muted);font-size:12.5px;margin-top:3px;animation:rise .7s .22s both;}
-
-  .feat{margin:24px 0 8px;display:block;text-decoration:none;color:var(--bg);border-radius:22px;padding:2px;
-    position:relative;overflow:hidden;background:linear-gradient(120deg,var(--pulse),var(--pulse2),var(--hot));
-    background-size:200% 200%;animation:rise .7s .26s both, flow 6s ease infinite;box-shadow:0 18px 44px rgba(123,92,255,.3);}
-  .feat-in{background:#fff;border-radius:20px;padding:18px 20px;position:relative;overflow:hidden;}
-  .feat-top{display:flex;align-items:center;gap:13px;position:relative;}
-  .feat .em{font-size:30px;}
-  .feat h2{font-size:18px;font-weight:900;color:#0a0a14;}
-  .feat .d{font-size:12px;font-weight:600;color:#5a5a72;margin-top:2px;}
-  .feat-cta{margin-top:14px;border-radius:13px;padding:12px;text-align:center;font-weight:900;font-size:15px;color:#fff;
-    position:relative;background:linear-gradient(100deg,var(--pulse2),var(--hot));
-    display:flex;align-items:center;justify-content:center;gap:8px;}
-  .feat .small{font-size:11px;text-align:center;color:#7a7a92;margin-top:9px;font-weight:600;}
-  .badge{position:absolute;top:13px;inset-inline-start:13px;background:#0a0a14;color:var(--pulse);
-    font-size:10px;font-weight:800;padding:4px 9px;border-radius:20px;z-index:2;}
-
-  .label{display:flex;align-items:center;gap:10px;margin:24px 4px 13px;color:var(--muted);
-    font-weight:700;font-size:12px;animation:rise .7s .3s both;}
-  .label::before,.label::after{content:"";flex:1;height:1px;background:var(--stroke);}
-  .link{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--paper);
-    background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:14px 16px;margin-bottom:11px;
-    backdrop-filter:blur(10px);transition:transform .16s,border-color .16s,background .16s;animation:rise .6s both;}
-  .link:active{transform:scale(.98);}
-  .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-  .ig{background:linear-gradient(45deg,#f09433,#dc2743,#bc1888);}
-  .x{background:#000;border:1px solid #2a2a2a;}
-  .tg{background:#229ED9;}
-  .link .t{font-weight:700;font-size:15px;}
-  .link .h{font-size:12px;color:var(--muted);margin-top:1px;}
-  .link .ar{margin-inline-start:auto;color:var(--muted);font-size:17px;}
-  footer{text-align:center;margin-top:28px;color:var(--muted);font-size:12px;animation:rise .7s .6s both;}
-  footer b{color:var(--paper);}
-
-  @keyframes beat{0%,100%{box-shadow:0 0 0 0 rgba(0,224,198,.55);}50%{box-shadow:0 0 0 9px rgba(0,224,198,0);}}
-  @keyframes trace{to{stroke-dashoffset:0;}}
-  @keyframes glow{0%,100%{filter:drop-shadow(0 0 1px var(--pulse));}50%{filter:drop-shadow(0 0 6px var(--pulse));}}
-  @keyframes rise{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-  @keyframes drift{from{transform:translate(-2%,-1%) scale(1);}to{transform:translate(2%,1%) scale(1.08);}}
-  @keyframes flow{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+:root{--bg:#06060c;--pulse:#00e0c6;--pulse2:#7b5cff;--hot:#ff4d8d;--paper:#eef0ff;--muted:rgba(238,240,255,.5);--card:rgba(255,255,255,.045);--stroke:rgba(255,255,255,.09);}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Cairo',sans-serif;color:var(--paper);background:var(--bg);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:24px 18px 60px;position:relative;overflow-x:hidden;}
+body[data-lang="fa"]{font-family:'Vazirmatn',sans-serif;}
+body[data-lang="en"]{font-family:'Space Grotesk',sans-serif;direction:ltr;}
+body::before{content:"";position:fixed;inset:-30%;z-index:0;pointer-events:none;background:radial-gradient(420px 420px at 18% 8%,rgba(0,224,198,.20),transparent 60%),radial-gradient(460px 460px at 85% 18%,rgba(123,92,255,.22),transparent 60%),radial-gradient(500px 500px at 50% 105%,rgba(255,77,141,.16),transparent 60%);filter:blur(8px);animation:drift 14s ease-in-out infinite alternate;}
+.wrap{width:100%;max-width:440px;position:relative;z-index:1;}
+.langbar{display:flex;gap:6px;justify-content:center;margin-bottom:18px;animation:rise .6s both;}
+.langbar button{background:var(--card);border:1px solid var(--stroke);color:var(--muted);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;}
+.langbar button.active{background:linear-gradient(100deg,var(--pulse),var(--pulse2));color:#06060c;border-color:transparent;}
+.brand{display:flex;flex-direction:column;align-items:center;margin-bottom:6px;}
+.logo{display:flex;align-items:center;gap:10px;animation:rise .7s both;}
+.logo .dot{width:14px;height:14px;border-radius:50%;background:var(--pulse);box-shadow:0 0 0 0 rgba(0,224,198,.6);animation:beat 1.6s infinite;}
+.logo h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-.5px;background:linear-gradient(100deg,var(--pulse),var(--pulse2) 60%,var(--hot));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.heartbeat{width:200px;height:30px;margin:8px 0 2px;animation:rise .7s .1s both;}
+.heartbeat path{stroke:url(#pg);stroke-width:2.5;fill:none;stroke-dasharray:300;stroke-dashoffset:300;animation:trace 2.4s ease-in-out .4s forwards,glow 2.6s ease-in-out 2.8s infinite;}
+.tag{color:var(--paper);font-weight:700;font-size:15px;margin-top:6px;animation:rise .7s .16s both;}
+.by{color:var(--muted);font-size:12.5px;margin-top:3px;animation:rise .7s .22s both;}
+.feat{margin:24px 0 8px;display:block;text-decoration:none;color:var(--bg);border-radius:22px;padding:2px;position:relative;overflow:hidden;background:linear-gradient(120deg,var(--pulse),var(--pulse2),var(--hot));background-size:200% 200%;animation:rise .7s .26s both,flow 6s ease infinite;box-shadow:0 18px 44px rgba(123,92,255,.3);cursor:pointer;}
+.feat-in{background:#fff;border-radius:20px;padding:18px 20px;position:relative;overflow:hidden;}
+.feat-top{display:flex;align-items:center;gap:13px;position:relative;}
+.feat .em{font-size:30px;}
+.feat h2{font-size:18px;font-weight:900;color:#0a0a14;}
+.feat .d{font-size:12px;font-weight:600;color:#5a5a72;margin-top:2px;}
+.feat-cta{margin-top:14px;border-radius:13px;padding:12px;text-align:center;font-weight:900;font-size:15px;color:#fff;position:relative;background:linear-gradient(100deg,var(--pulse2),var(--hot));display:flex;align-items:center;justify-content:center;gap:8px;}
+.feat .small{font-size:11px;text-align:center;color:#7a7a92;margin-top:9px;font-weight:600;}
+.badge{position:absolute;top:13px;inset-inline-start:13px;background:#0a0a14;color:var(--pulse);font-size:10px;font-weight:800;padding:4px 9px;border-radius:20px;z-index:2;}
+.label{display:flex;align-items:center;gap:10px;margin:24px 4px 13px;color:var(--muted);font-weight:700;font-size:12px;animation:rise .7s .3s both;}
+.label::before,.label::after{content:"";flex:1;height:1px;background:var(--stroke);}
+.link{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--paper);background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:14px 16px;margin-bottom:11px;backdrop-filter:blur(10px);transition:transform .16s,border-color .16s,background .16s;animation:rise .6s both;}
+.link:active{transform:scale(.98);}
+.ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.ig{background:linear-gradient(45deg,#f09433,#dc2743,#bc1888);}
+.x{background:#000;border:1px solid #2a2a2a;}
+.tg{background:#229ED9;}
+.link .t{font-weight:700;font-size:15px;}
+.link .h{font-size:12px;color:var(--muted);margin-top:1px;}
+.link .ar{margin-inline-start:auto;color:var(--muted);font-size:17px;}
+footer{text-align:center;margin-top:28px;color:var(--muted);font-size:12px;animation:rise .7s .6s both;}
+footer b{color:var(--paper);}
+@keyframes beat{0%,100%{box-shadow:0 0 0 0 rgba(0,224,198,.55);}50%{box-shadow:0 0 0 9px rgba(0,224,198,0);}}
+@keyframes trace{to{stroke-dashoffset:0;}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 1px var(--pulse));}50%{filter:drop-shadow(0 0 6px var(--pulse));}}
+@keyframes rise{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes drift{from{transform:translate(-2%,-1%) scale(1);}to{transform:translate(2%,1%) scale(1.08);}}
+@keyframes flow{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
 </style>
 </head>
+
 <body data-lang="ar">
-  <div class="wrap">
-    <div class="langbar">
-      <button data-set="ar" class="active" onclick="setLang('ar')">عربي</button>
-      <button data-set="en" onclick="setLang('en')">English</button>
-      <button data-set="fa" onclick="setLang('fa')">فارسی</button>
-    </div>
-
-    <div class="brand">
-      <div class="logo"><span class="dot"></span><h1>Nuvopulse</h1></div>
-      <svg class="heartbeat" viewBox="0 0 200 30" fill="none">
-        <defs><linearGradient id="pg" x1="0" y1="0" x2="200" y2="0">
-          <stop offset="0" stop-color="#00e0c6"/><stop offset=".6" stop-color="#7b5cff"/><stop offset="1" stop-color="#ff4d8d"/>
-        </linearGradient></defs>
-        <path d="M0 15 H60 L70 15 L78 4 L88 26 L96 15 L104 15 L112 9 L120 21 L128 15 H200"/>
-      </svg>
-      <div class="tag" data-i="tag"></div>
-      <div class="by" data-i="by"></div>
-    </div>
-
-    <div class="feat" id="subscribeBtn" style="cursor:pointer">
-      <div class="feat-in">
-        <span class="badge" data-i="badge"></span>
-        <div class="feat-top">
-          <span class="em">🏆</span>
-          <div>
-            <h2 data-i="ftitle"></h2>
-            <div class="d" data-i="fdesc"></div>
-          </div>
-        </div>
-        <div class="feat-cta" data-i="fcta"></div>
-        <div class="small" data-i="fsmall"></div>
-      </div>
-    </div>
-
-    <div class="label" data-i="follow"></div>
-
-    <a class="link" href="https://www.instagram.com/nuvopulse" target="_blank" rel="noopener">
-      <span class="ic ig">📷</span>
-      <div><div class="t">Instagram</div><div class="h">@nuvopulse</div></div>
-      <span class="ar">↗</span>
-    </a>
-    <a class="link" href="https://x.com/nuvopulse" target="_blank" rel="noopener">
-      <span class="ic x">𝕏</span>
-      <div><div class="t">X (Twitter)</div><div class="h">@nuvopulse</div></div>
-      <span class="ar">↗</span>
-    </a>
-    <a class="link" href="https://t.me/NuvoPulse" target="_blank" rel="noopener">
-      <span class="ic tg">✈</span>
-      <div><div class="t">Telegram</div><div class="h">@NuvoPulse</div></div>
-      <span class="ar">↗</span>
-    </a>
-
-    <footer>© 2026 <b>Nuvopulse</b> · <span data-i="foot"></span></footer>
+<div class="wrap">
+  <div class="langbar">
+    <button data-set="ar" class="active" onclick="setLang('ar')">عربي</button>
+    <button data-set="en" onclick="setLang('en')">English</button>
+    <button data-set="fa" onclick="setLang('fa')">فارسی</button>
   </div>
+
+  <div class="brand">
+    <div class="logo"><span class="dot"></span><h1>Nuvopulse</h1></div>
+    <svg class="heartbeat" viewBox="0 0 200 30" fill="none">
+      <defs><linearGradient id="pg" x1="0" y1="0" x2="200" y2="0">
+        <stop offset="0" stop-color="#00e0c6"/><stop offset=".6" stop-color="#7b5cff"/><stop offset="1" stop-color="#ff4d8d"/>
+      </linearGradient></defs>
+      <path d="M0 15 H60 L70 15 L78 4 L88 26 L96 15 L104 15 L112 9 L120 21 L128 15 H200"/>
+    </svg>
+    <div class="tag" data-i="tag"></div>
+    <div class="by" data-i="by"></div>
+  </div>
+
+  <div class="feat" id="subscribeBtn">
+    <div class="feat-in">
+      <span class="badge" data-i="badge"></span>
+      <div class="feat-top">
+        <span class="em">🏆</span>
+        <div>
+          <h2 data-i="ftitle"></h2>
+          <div class="d" data-i="fdesc"></div>
+        </div>
+      </div>
+      <div class="feat-cta" data-i="fcta"></div>
+      <div class="small" data-i="fsmall"></div>
+    </div>
+  </div>
+
+  <div class="label" data-i="follow"></div>
+
+  <a class="link" href="https://www.instagram.com/nuvopulse" target="_blank" rel="noopener">
+    <span class="ic ig">📷</span>
+    <div><div class="t">Instagram</div><div class="h">@nuvopulse</div></div>
+    <span class="ar">↗</span>
+  </a>
+
+  <a class="link" href="https://x.com/nuvopulse" target="_blank" rel="noopener">
+    <span class="ic x">𝕏</span>
+    <div><div class="t">X (Twitter)</div><div class="h">@nuvopulse</div></div>
+    <span class="ar">↗</span>
+  </a>
+
+  <a class="link" href="https://t.me/NuvoPulse" target="_blank" rel="noopener">
+    <span class="ic tg">✈</span>
+    <div><div class="t">Telegram</div><div class="h">@NuvoPulse</div></div>
+    <span class="ar">↗</span>
+  </a>
+
+  <footer>© 2026 <b>Nuvopulse</b> · <span data-i="foot"></span></footer>
+</div>
 
 <script>
 const I = {
   ar:{dir:"rtl",tag:"نبض كل جديد ⚡",by:"بإشراف عبدالملك هوتي",badge:"⭐ مميّز",
       ftitle:"تقويم كأس العالم 2026",fdesc:"104 مباريات تُضاف لجوالك تلقائياً + تنبيهات",
       fcta:"＋ اشترك في التقويم الآن",fsmall:"iPhone و Android · مجاناً · يحدّث نفسه",
-      follow:"تابع Nuvopulse",foot:"نبض كل جديد"},
+      follow:"تابع Nuvopulse",foot:"نبض كل جديد",
+      helpTitle:"إضافة التقويم على أندرويد",
+      help1:"افتح Google Calendar من المتصفح.",
+      help2:"اضغط + بجانب تقاويم أخرى ثم اختر من عنوان URL.",
+      help3:"انسخ الرابط التالي والصقه هناك:",
+      help4:"اضغط إضافة تقويم وسيظهر في جوالك تلقائياً.",
+      copy:"نسخ رابط التقويم",copied:"تم النسخ ✓",close:"إغلاق"},
   en:{dir:"ltr",tag:"The pulse of everything new ⚡",by:"by Abdulmalik Houti",badge:"⭐ Featured",
       ftitle:"World Cup 2026 Calendar",fdesc:"104 matches auto-added to your phone + reminders",
       fcta:"＋ Subscribe to Calendar",fsmall:"iPhone & Android · Free · Auto-updates",
-      follow:"Follow Nuvopulse",foot:"The pulse of everything new"},
+      follow:"Follow Nuvopulse",foot:"The pulse of everything new",
+      helpTitle:"Add Calendar on Android",
+      help1:"Open Google Calendar in your browser.",
+      help2:"Tap + next to Other calendars, then choose From URL.",
+      help3:"Copy and paste this calendar link:",
+      help4:"Tap Add calendar and it will sync to your phone.",
+      copy:"Copy calendar link",copied:"Copied ✓",close:"Close"},
   fa:{dir:"rtl",tag:"نبض هر تازه ⚡",by:"توسط عبدالملک هوتی",badge:"⭐ ویژه",
       ftitle:"تقویم جام جهانی ۲۰۲۶",fdesc:"۱۰۴ بازی به‌طور خودکار به گوشی شما اضافه می‌شود + یادآوری",
       fcta:"＋ اشتراک در تقویم",fsmall:"iPhone و Android · رایگان · به‌روزرسانی خودکار",
-      follow:"دنبال کنید Nuvopulse",foot:"نبض هر تازه"}
+      follow:"دنبال کنید Nuvopulse",foot:"نبض هر تازه",
+      helpTitle:"افزودن تقویم در اندروید",
+      help1:"Google Calendar را در مرورگر باز کنید.",
+      help2:"روی + کنار تقویم‌های دیگر بزنید و From URL را انتخاب کنید.",
+      help3:"این لینک را کپی و جایگذاری کنید:",
+      help4:"روی Add calendar بزنید تا با گوشی شما همگام شود.",
+      copy:"کپی لینک تقویم",copied:"کپی شد ✓",close:"بستن"}
 };
+
 function setLang(l){
-  const t=I[l];
+  const t = I[l];
   document.body.setAttribute("data-lang",l);
-  document.documentElement.lang=l;
-  document.documentElement.dir=t.dir;
-  document.querySelectorAll("[data-i]").forEach(el=>{el.textContent=t[el.getAttribute("data-i")];});
+  document.documentElement.lang = l;
+  document.documentElement.dir = t.dir;
+  document.querySelectorAll("[data-i]").forEach(el=>{
+    el.textContent = t[el.getAttribute("data-i")];
+  });
   document.querySelectorAll(".langbar button").forEach(b=>{
     b.classList.toggle("active", b.getAttribute("data-set")===l);
   });
 }
 
-const WEBCAL = "webcal://cdn.jsdelivr.net/gh/MR-989/Worldcup2026@main/worldcup.ics";
-const HTTPS  = "https://cdn.jsdelivr.net/gh/MR-989/Worldcup2026@main/worldcup.ics";
-const GCAL_ADD = "https://calendar.google.com/calendar/u/0/r/settings/addbyurl";
+const HTTPS = "https://mr-989.github.io/Worldcup2026/WorldCup2026.ics";
+const WEBCAL = "webcal://mr-989.github.io/Worldcup2026/WorldCup2026.ics";
 
 function subscribe(){
   const ua = navigator.userAgent || "";
   const isApple = /iPhone|iPad|iPod|Macintosh/i.test(ua);
-  const isAndroid = /Android/i.test(ua);
   if(isApple){
     window.location.href = WEBCAL;
-  } else {
-    // Android & desktop: show instructions overlay (mobile Google Calendar can't add URL directly)
-    showHelp(isAndroid);
+  }else{
+    showHelp();
   }
 }
 
-function showHelp(isAndroid){
+function showHelp(){
   const lang = document.body.getAttribute("data-lang") || "ar";
-  const H = {
-    ar:{title:"إضافة التقويم على "+(isAndroid?"أندرويد":"جهازك"),
-        steps:[
-          "افتح <b>calendar.google.com</b> من متصفح (الأفضل من كمبيوتر، أو متصفح الجوال بوضع \"موقع كامل\")",
-          "اضغط <b>+</b> بجانب \"تقاويم أخرى\" ← <b>من عنوان URL</b>",
-          "الصق هذا الرابط:",
-          "اضغط <b>إضافة تقويم</b> — سيظهر في جوالك تلقائياً ✅"
-        ],close:"إغلاق",copy:"نسخ الرابط",copied:"تم النسخ ✓"},
-    en:{title:"Add calendar on "+(isAndroid?"Android":"your device"),
-        steps:[
-          "Open <b>calendar.google.com</b> in a browser (best on desktop, or mobile browser in \"Desktop site\" mode)",
-          "Click <b>+</b> next to \"Other calendars\" ← <b>From URL</b>",
-          "Paste this link:",
-          "Click <b>Add calendar</b> — it will sync to your phone ✅"
-        ],close:"Close",copy:"Copy link",copied:"Copied ✓"},
-    fa:{title:"افزودن تقویم در "+(isAndroid?"اندروید":"دستگاه شما"),
-        steps:[
-          "<b>calendar.google.com</b> را در مرورگر باز کن (بهتر روی کامپیوتر یا حالت \"سایت دسکتاپ\")",
-          "روی <b>+</b> کنار \"تقویم‌های دیگر\" بزن ← <b>از URL</b>",
-          "این لینک را بچسبان:",
-          "روی <b>افزودن تقویم</b> بزن — به گوشی‌ات همگام می‌شود ✅"
-        ],close:"بستن",copy:"کپی لینک",copied:"کپی شد ✓"}
-  };
-  const t = H[lang];
-  let ov = document.getElementById("helpOverlay");
-  if(ov) ov.remove();
-  ov = document.createElement("div");
+  const t = I[lang];
+
+  const old = document.getElementById("helpOverlay");
+  if(old) old.remove();
+
+  const ov = document.createElement("div");
   ov.id = "helpOverlay";
   ov.style.cssText = "position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);";
+
   ov.innerHTML = `
     <div style="background:#12101f;border:1px solid rgba(255,255,255,.12);border-radius:20px;max-width:400px;width:100%;padding:24px;color:#eef0ff;">
-      <div style="font-size:18px;font-weight:800;margin-bottom:16px;background:linear-gradient(100deg,#00e0c6,#7b5cff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">📅 ${t.title}</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:16px;background:linear-gradient(100deg,#00e0c6,#7b5cff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">📅 ${t.helpTitle}</div>
       <div style="font-size:14px;line-height:1.7;">
-        <div style="margin-bottom:10px;">1. ${t.steps[0]}</div>
-        <div style="margin-bottom:10px;">2. ${t.steps[1]}</div>
-        <div style="margin-bottom:8px;">3. ${t.steps[2]}</div>
-        <div style="background:#06060c;border:1px solid #333;border-radius:8px;padding:10px;font-size:11px;direction:ltr;word-break:break-all;margin-bottom:6px;font-family:monospace;color:#7b9;">${HTTPS}</div>
-        <button onclick="navigator.clipboard.writeText('${HTTPS}').then(()=>{this.textContent='${t.copied}';})" style="width:100%;padding:10px;border:none;border-radius:10px;background:linear-gradient(100deg,#00e0c6,#7b5cff);color:#06060c;font-weight:800;cursor:pointer;margin-bottom:12px;">📋 ${t.copy}</button>
-        <div style="margin-bottom:16px;">4. ${t.steps[3]}</div>
+        <div style="margin-bottom:10px;">1. ${t.help1}</div>
+        <div style="margin-bottom:10px;">2. ${t.help2}</div>
+        <div style="margin-bottom:8px;">3. ${t.help3}</div>
+        <div style="background:#06060c;border:1px solid #333;border-radius:8px;padding:10px;font-size:11px;direction:ltr;word-break:break-all;margin-bottom:8px;font-family:monospace;color:#7bffdd;">${HTTPS}</div>
+        <button id="copyBtn" style="width:100%;padding:10px;border:none;border-radius:10px;background:linear-gradient(100deg,#00e0c6,#7b5cff);color:#06060c;font-weight:800;cursor:pointer;margin-bottom:12px;">📋 ${t.copy}</button>
+        <div style="margin-bottom:16px;">4. ${t.help4}</div>
       </div>
       <button onclick="document.getElementById('helpOverlay').remove()" style="width:100%;padding:12px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:transparent;color:#eef0ff;font-weight:700;cursor:pointer;">${t.close}</button>
     </div>`;
+
   document.body.appendChild(ov);
+
+  document.getElementById("copyBtn").onclick = function(){
+    navigator.clipboard.writeText(HTTPS);
+    this.textContent = t.copied;
+  };
 }
 
 document.getElementById("subscribeBtn").addEventListener("click", subscribe);
-
 setLang("ar");
 </script>
 </body>
